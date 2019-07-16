@@ -40,8 +40,8 @@ import javax.annotation.Nullable;
 public class UsersFragment extends Fragment {
 
     RecyclerView recyclerView;
-    AdapterUsers adapterUsers;
-    List<ModelUsers> usersList;
+    private RecyclerView.Adapter Adapter;
+    ArrayList<ModelUsers> usersList;
 
     TextView data;
 
@@ -57,19 +57,20 @@ public class UsersFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_users, container, false);
 
-        data = view.findViewById(R.id.data);
+        //data = view.findViewById(R.id.data);
+
+        usersList = new ArrayList<ModelUsers>();
+
         recyclerView = view.findViewById(R.id.users_recycledView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        usersList = new ArrayList<>();
 
         getAllUsers();
 
         return view;
     }
 
-    private void getAllUsers() {
+   private void getAllUsers() {
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -80,21 +81,20 @@ public class UsersFragment extends Fragment {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         ModelUsers md = document.toObject(ModelUsers.class);
-                              //  new ModelUsers(document.get("name").toString(),document.get("year").toString(),document.get("dept").toString(),document.getId());
+                        //md=new ModelUsers(document.get("name").toString(),document.get("year").toString(),document.get("dept").toString());
 
                         if(!user.getEmail().equals(document.getId())) {
-                            usersList.add(md);
+                            //usersList.add(md);
+                            usersList.add(new ModelUsers(md.name,md.year,md.dept));
                             Log.d("AAAAAAAAAAAAAAAAA", md.toString());
 
                         }
-                        data.setText(usersList.toString());
 
+                        Toast.makeText(getActivity(), md.toString(), Toast.LENGTH_SHORT).show();
+                        //data.setText(usersList.toString());
 
-//                        AdapterUsers adapterUsers = new AdapterUsers(getActivity(), usersList);
-//
-//                        recyclerView.setAdapter(adapterUsers);
-//
-//                        Toast.makeText(getContext(), "Action done",Toast.LENGTH_SHORT).show();
+                        Adapter = new ExampleAdapter(usersList);
+                        recyclerView.setAdapter(Adapter);
 
                     }
 
