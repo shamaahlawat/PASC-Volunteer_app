@@ -8,7 +8,6 @@ public class ModelUsers {
         this.name = name;
         this.year = year;
         this.dept = dept;
-
     }
 
     @Override
@@ -47,4 +46,5 @@ public class ModelUsers {
     public void setDept(String dept) {
         this.dept = dept;
     }
+
 }
