@@ -90,7 +90,6 @@ public class UsersFragment extends Fragment {
 
                         }
 
-                        Toast.makeText(getActivity(), md.toString(), Toast.LENGTH_SHORT).show();
                         //data.setText(usersList.toString());
 
                         Adapter = new ExampleAdapter(usersList);
