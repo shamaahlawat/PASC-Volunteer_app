@@ -104,6 +104,10 @@ public class DashboardActivity extends AppCompatActivity {
                 finish();
                 startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
             }
+            case R.id.action_add_post:{
+
+                startActivity(new Intent(DashboardActivity.this, AddPostActivity.class));
+            }
         }
 
         return super.onOptionsItemSelected(item);
