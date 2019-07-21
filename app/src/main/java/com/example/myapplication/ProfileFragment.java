@@ -1,7 +1,11 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -60,6 +64,7 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.profile, container, false);
+        setHasOptionsMenu(true);
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
@@ -67,6 +72,9 @@ public class ProfileFragment extends Fragment {
         mRef = firebaseFirestore.collection("User").document(user.getEmail());
 
         recyclerView = (RecyclerView) view.findViewById(R.id.rv);
+        name = view.findViewById(R.id.name);
+        year = view.findViewById(R.id.year);
+        dept = view.findViewById(R.id.dept);
 
         domainList = new ArrayList<>();
         domainList.add(new domain(R.drawable.linkedin1, "Android"));
@@ -106,6 +114,36 @@ public class ProfileFragment extends Fragment {
 
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        inflater.inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.findItem(R.id.action_add_post).setVisible(false);
+        menu.findItem(R.id.action_search).setVisible(false);
+    }
+
+    //handle option clicks
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        switch(id){
+            case R.id.action_logout:{
+                firebaseAuth.signOut();
+                getActivity().finish();
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+            }
+            case R.id.action_add_post:{
+
+                startActivity(new Intent(getActivity(), AddPostActivity.class));
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 

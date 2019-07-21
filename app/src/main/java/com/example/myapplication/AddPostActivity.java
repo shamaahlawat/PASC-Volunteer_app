@@ -3,6 +3,7 @@ package com.example.myapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -48,6 +49,7 @@ public class AddPostActivity extends AppCompatActivity {
         save_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Date = post_date.getText().toString().trim();
                 Title = post_title.getText().toString().trim();
                 Description = post_description.getText().toString().trim();
@@ -74,8 +76,10 @@ public class AddPostActivity extends AppCompatActivity {
                     }
                 });
                 finish();
+                startActivity(new Intent(AddPostActivity.this, DashboardActivity.class));
             }
         });
+
     }
 
 

@@ -69,7 +69,7 @@ public class DashboardActivity extends AppCompatActivity {
                     return true;
                 }
                 case R.id.nav_users:{
-                    actionBar.setTitle("Users");
+                    actionBar.setTitle("Explore");
                     UsersFragment fragment3 = new UsersFragment();
                     FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
                     ft3.replace(R.id.content, fragment3, "");
@@ -83,35 +83,7 @@ public class DashboardActivity extends AppCompatActivity {
         }
     };
 
-    //inflate menu items
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    //handle option clicks
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-        switch(id){
-            case R.id.action_logout:{
-                firebaseAuth.signOut();
-                finish();
-                startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
-            }
-            case R.id.action_add_post:{
-
-                startActivity(new Intent(DashboardActivity.this, AddPostActivity.class));
-            }
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onBackPressed() {

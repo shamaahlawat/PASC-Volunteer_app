@@ -41,7 +41,7 @@
                 >
 
                 <TextView
-                    android:id="@+id/namep"
+                    android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
@@ -52,7 +52,7 @@
                     android:textColor="@color/colorWhite"
                     tools:ignore="HardcodedText,RtlHardcoded" />
                 <TextView
-                    android:id="@+id/emailp"
+                    android:id="@+id/dept"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
@@ -61,7 +61,7 @@
                     android:textColor="@color/colorWhite"
                     tools:ignore="HardcodedText" />
                 <TextView
-                    android:id="@+id/phonep"
+                    android:id="@+id/year"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"

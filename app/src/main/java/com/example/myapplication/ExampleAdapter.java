@@ -3,6 +3,8 @@ package com.example.myapplication;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -10,10 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleViewHolder> {
 
     private ArrayList<ModelUsers> mExampleList;
+    private ArrayList<ModelUsers> modelArrayList;
 
     public static class ExampleViewHolder extends RecyclerView.ViewHolder {
         public ImageView mImageView;
@@ -23,21 +27,21 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
 
         public ExampleViewHolder(@NonNull View itemView) {
             super(itemView);
-            mImageView=itemView.findViewById(R.id.imageView);
-            mTextView1=itemView.findViewById(R.id.textView1);
-            mTextView2=itemView.findViewById(R.id.textView2);
-            mTextView3=itemView.findViewById(R.id.textView3);
+            mImageView = itemView.findViewById(R.id.imageView);
+            mTextView1 = itemView.findViewById(R.id.textView1);
+            mTextView2 = itemView.findViewById(R.id.textView2);
+            mTextView3 = itemView.findViewById(R.id.textView3);
         }
     }
 
-    public ExampleAdapter(ArrayList<ModelUsers> exampleList){
-        mExampleList=exampleList;
+    public ExampleAdapter(ArrayList<ModelUsers> exampleList) {
+        mExampleList = exampleList;
     }
 
     @NonNull
     @Override
     public ExampleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.user_cardtemplate,parent,false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_cardtemplate, parent, false);
         return new ExampleViewHolder(v);
     }
 
@@ -54,4 +58,6 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
     public int getItemCount() {
         return mExampleList.size();
     }
+
+
 }

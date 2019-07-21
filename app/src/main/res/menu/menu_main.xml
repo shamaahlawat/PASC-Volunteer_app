@@ -12,7 +12,12 @@
         android:title="Add post"
         app:showAsAction="always"
         android:icon="@drawable/ic_add_white"/>
-
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="Search"
+        app:showAsAction="always"
+        app:actionViewClass="android.widget.SearchView" />
 
 
 </menu>
