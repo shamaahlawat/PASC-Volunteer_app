@@ -1,8 +1,14 @@
 package com.example.myapplication;
 
+import android.util.Log;
+
+import java.util.ArrayList;
+
 public class ModelUsers {
 
     String name, year, dept;
+    String domain1, domain2, domain3;
+    ArrayList<String> dom;
 
     public ModelUsers(String name, String year, String dept) {
         this.name = name;
@@ -19,8 +25,16 @@ public class ModelUsers {
                 '}';
     }
 
+    public void addnew()
+    {
+        dom = new ArrayList<>();
+        dom.add(domain1);
+        dom.add(domain2);
+        dom.add(domain3);
+    }
     public ModelUsers() {
-
+        dom = new ArrayList<String>();
+        Log.d("md", "ModelUsers: called");
     }
 
     public String getName() {

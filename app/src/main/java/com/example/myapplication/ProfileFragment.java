@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +27,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,28 +79,48 @@ public class ProfileFragment extends Fragment {
         dept = view.findViewById(R.id.dept);
 
         domainList = new ArrayList<>();
-        domainList.add(new domain(R.drawable.linkedin1, "Android"));
-        domainList.add(new domain(R.drawable.linkedin1, "Web"));
-        domainList.add(new domain(R.drawable.linkedin1, "Android"));
-        domainList.add(new domain(R.drawable.linkedin1, "Web"));
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        RecyclerView.LayoutManager rvLiLayoutManager = layoutManager;
-        recyclerView.setLayoutManager(rvLiLayoutManager);
-
-        profile_fragment dom = new profile_fragment(getActivity(),domainList);
-
-        recyclerView.setAdapter(dom);
 
         FirebaseFirestore.getInstance().collection("User").document(firebaseAuth.getCurrentUser().getEmail())
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 ModelUsers md = task.getResult().toObject(ModelUsers.class);
+                md.addnew();
+                Iterator<String> itr = md.dom.iterator();
+                Log.d("while11", "onComplete: entered");
+                while(itr.hasNext()) {
+                    Log.d("while1", "onComplete: entered");
+                    String d = itr.next();
+                    switch (d) {
+                        case "Android": {
+                            domainList.add(new domain(R.drawable.android, d));
+                            break;
+                        }
+                        case "Web": {
+                            domainList.add(new domain(R.drawable.web, d));
+                            break;
+                        }
+                        case "ML": {
+                            domainList.add(new domain(R.drawable.maclearn, d));
+                            break;
+                        }
+
+                    }
+                }
                 if(md!=null) {
                     name.setText(md.getName());
                     dept.setText(md.getDept());
                     year.setText(md.getYear());
+
+
+
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                    RecyclerView.LayoutManager rvLiLayoutManager = layoutManager;
+                    recyclerView.setLayoutManager(rvLiLayoutManager);
+
+                    profile_fragment dom = new profile_fragment(getActivity(),domainList);
+
+                    recyclerView.setAdapter(dom);
                      /*
                     try{
                     //if image is received, then load
