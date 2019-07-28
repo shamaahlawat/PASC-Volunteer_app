@@ -14,10 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -55,8 +53,8 @@ public class ProfileActivity extends AppCompatActivity {
         logoutButton = (Button)findViewById(R.id.logoutButton);
 
         editProfButton = (Button)findViewById(R.id.editProfilebutton);
-        userid = (EditText) findViewById(R.id.userId);
-        dept = (EditText) findViewById(R.id.department);
+        userid = (EditText) findViewById(R.id.name);
+        dept = (EditText) findViewById(R.id.dept);
         year = (EditText) findViewById(R.id.year);
 
         firebaseAuth = FirebaseAuth.getInstance();

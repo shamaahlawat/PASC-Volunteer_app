@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                                             if (task.isSuccessful()) {
                                                 //start prof activity
                                                 finish();
-                                                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                                                startActivity(new Intent(MainActivity.this, RegistrationFormActivity.class));
                                             }
                                             else{
                                                 Toast.makeText(MainActivity.this, "Login in to your account", Toast.LENGTH_SHORT).show();

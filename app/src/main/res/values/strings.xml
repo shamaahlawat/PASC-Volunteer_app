@@ -4,6 +4,32 @@
     <string name="email">Email</string>
     <string name="phone">Phone</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="dept_list">
+        <item>Computer</item>
+        <item>IT</item>
+        <item>EnTC</item>
+    </string-array>
+
+    <string-array name="year_list">
+        <item>FE</item>
+        <item>SE</item>
+        <item>TE</item>
+        <item>BE</item>
+        <item>Alumni</item>
+
+    </string-array>
+
+    <string-array name="domain_list">
+        <item id="Android">Android</item>
+        <item id="ML">ML</item>
+        <item id="Web">Web</item>
+        <item>Competitive Coding</item>
+    </string-array>
+
+
+
+
 </resources>
