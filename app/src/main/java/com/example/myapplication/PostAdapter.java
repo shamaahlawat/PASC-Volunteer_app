@@ -18,13 +18,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         public TextView textView1;
         public TextView textView2;
         public TextView textView3;
+        public TextView textView4;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            textView1=itemView.findViewById(R.id.textView4);
-            textView2=itemView.findViewById(R.id.textView5);
-            textView3=itemView.findViewById(R.id.textView6);
+            textView1=itemView.findViewById(R.id.textView_title);
+            textView2=itemView.findViewById(R.id.textView_description);
+            textView3=itemView.findViewById(R.id.textView_date);
+            textView4=itemView.findViewById(R.id.textView_time);
         }
     }
 
@@ -46,6 +48,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         holder.textView1.setText(currentPost.getTitle());
         holder.textView2.setText(currentPost.getDescription());
         holder.textView3.setText(currentPost.getDate());
+        holder.textView4.setText((currentPost.getTime()));
     }
 
     @Override

@@ -83,11 +83,11 @@ public class HomeFragment extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 //ModelPosts md = document.toObject(ModelPosts.class);
-                                ModelPosts md=new ModelPosts(document.get("Title").toString(),document.get("Description").toString(),document.get("Date").toString());
+                                ModelPosts md=new ModelPosts(document.get("Title").toString(),document.get("Description").toString(),document.get("Date").toString(),document.get("Time").toString());
 
                                 if(true) {
                                     //usersList.add(md);
-                                    postsList.add(new ModelPosts(md.title,md.description,md.date));
+                                    postsList.add(new ModelPosts(md.title,md.description,md.date,md.time));
                                 }
 
                                 //data.setText(usersList.toString());
@@ -117,7 +117,7 @@ public class HomeFragment extends Fragment {
                                 if(document.get("Title").toString().toLowerCase().contains(s.toLowerCase())
                                         || document.get("userId").toString().toLowerCase().contains(s.toLowerCase())) {
                                     ModelPosts md = new ModelPosts(document.get("Title").toString(),
-                                            document.get("Description").toString(), document.get("Date").toString());
+                                            document.get("Description").toString(), document.get("Date").toString(), document.get("Time").toString());
                                     postsList.add(md);
                                 }
                                 P_adapter = new PostAdapter(postsList);
