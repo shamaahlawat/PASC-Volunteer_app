@@ -158,11 +158,9 @@ public class ProfileFragment extends Fragment {
                 firebaseAuth.signOut();
                 getActivity().finish();
                 startActivity(new Intent(getActivity(), LoginActivity.class));
+                break;
             }
-            case R.id.action_add_post:{
 
-                startActivity(new Intent(getActivity(), AddPostActivity.class));
-            }
         }
 
         return super.onOptionsItemSelected(item);

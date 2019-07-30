@@ -2,6 +2,8 @@ package com.example.myapplication;
 
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
+import java.util.ArrayList;
+
 @IgnoreExtraProperties
 public class ModelPosts {
     String title,description,date,time;

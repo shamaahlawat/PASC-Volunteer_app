@@ -25,7 +25,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -43,6 +45,8 @@ public class HomeFragment extends Fragment {
 
     FirebaseAuth firebaseAuth;
     FirebaseFirestore db;
+    ModelUsers currentUser;
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -74,40 +78,57 @@ public class HomeFragment extends Fragment {
 
     private void getAllPosts() {
 
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        db.collection("Post").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        FirebaseFirestore.getInstance().collection("User").document(firebaseAuth.getCurrentUser().getEmail())
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                currentUser = new ModelUsers(document.get("name").toString(),document.get("year").toString(),
+//                        document.get("dept").toString(),document.get("domain1").toString(),document.get("domain2").toString(),
+//                        document.get("domain3").toString(),document.get("github").toString(),document.get("linkedin").toString());
+                final ModelUsers currentUser = task.getResult().toObject(ModelUsers.class);
+                currentUser.addnew();
+//                Toast.makeText(getActivity(), currentUser.toString(), Toast.LENGTH_SHORT).show();
+
+                db.collection("Post").whereArrayContains("selectedYear", currentUser.getYear())
+                        .orderBy("Timestamp", Query.Direction.DESCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                //ModelPosts md = document.toObject(ModelPosts.class);
-                                ModelPosts md=new ModelPosts(document.get("Title").toString(),document.get("Description").toString(),document.get("Date").toString(),document.get("Time").toString());
 
-                                if(true) {
-                                    //usersList.add(md);
-                                    postsList.add(new ModelPosts(md.title,md.description,md.date,md.time));
-                                }
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            ModelPosts md = new ModelPosts(document.get("Title").toString(), document.get("Description").toString(),
+                                    document.get("Date").toString(), document.get("Time").toString());
 
-                                //data.setText(usersList.toString());
 
-                                P_adapter = new PostAdapter(postsList);
-                                P_recyclerView.setAdapter(P_adapter);
+                            if (((ArrayList<String>) document.get("selectedDept")).contains(currentUser.getDept()) &&
+                                    (((ArrayList<String>) document.get("selectedDomain")).contains(currentUser.getDomain1()) ||
+                                    ((ArrayList<String>) document.get("selectedDomain")).contains(currentUser.getDomain2()) ||
+                                    ((ArrayList<String>) document.get("selectedDomain")).contains(currentUser.getDomain3()))) {
 
+                                postsList.add(new ModelPosts(md.title, md.description, md.date, md.time));
                             }
 
-                        } else {
 
-                            Toast.makeText(getActivity(), "Action Failed",Toast.LENGTH_SHORT).show();
+                            P_adapter = new PostAdapter(postsList);
+                            P_recyclerView.setAdapter(P_adapter);
+
                         }
-                    }
-                });
-    }
 
+
+                       // Toast.makeText(getActivity(), "Action Failed", Toast.LENGTH_SHORT).show();
+                    }
+
+
+                });
+
+                //            Toast.makeText(getActivity(), "action done!!", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
     private void SearchTextPost(final String s){
 
-        db.collection("Post").get()
+        db.collection("Post").orderBy("Timestamp", Query.Direction.DESCENDING).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -137,6 +158,7 @@ public class HomeFragment extends Fragment {
                 });
 
     }
+
 
 
     @Override
@@ -171,10 +193,12 @@ public class HomeFragment extends Fragment {
                 firebaseAuth.signOut();
                 getActivity().finish();
                 startActivity(new Intent(getActivity(), LoginActivity.class));
+                break;
             }
             case R.id.action_add_post:{
                 getActivity().finish();
                 startActivity(new Intent(getActivity(), AddPostActivity.class));
+                break;
             }
         }
 

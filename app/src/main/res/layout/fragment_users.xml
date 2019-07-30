@@ -8,6 +8,16 @@
     tools:context=".UsersFragment">
 
 
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/users_recycledView"
+        android:layout_marginBottom="352dp"
+        android:gravity="center_vertical"
+        android:text="Search Users"
+        android:textAlignment="center" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/users_recycledView"
         android:layout_width="match_parent"
