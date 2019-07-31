@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class ModelUsers {
 
-    String name, year, dept;
+    String name, year, dept, image;
     String domain1, domain2, domain3;
     String github, linkedin;
     ArrayList<String> dom;
