@@ -18,9 +18,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -56,7 +59,22 @@ public class TechnicalChoiceFragment extends Fragment {
 
 
         firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore.getInstance().collection("User").document(firebaseAuth.getCurrentUser().getEmail())
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                ModelUsers md = task.getResult().toObject(ModelUsers.class);
+                if(md!=null && d1!=null && d2!=null &&d3!=null){
+                    d1.setText(md.getDomain1());
+                    d2.setText(md.getDomain2());
+                    d3.setText(md.getDomain3());
+                }
+            }
+        });
         db = FirebaseFirestore.getInstance();
+
+
 
         domainSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

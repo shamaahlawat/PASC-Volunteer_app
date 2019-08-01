@@ -29,8 +29,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -494,6 +498,13 @@ public class ProfileFragment extends Fragment {
                 firebaseAuth.signOut();
                 getActivity().finish();
                 startActivity(new Intent(getActivity(), LoginActivity.class));
+                break;
+            }
+            case R.id.action_edit : {
+                PersonalDetailsFragment fragment1 = new PersonalDetailsFragment();
+                FragmentTransaction ft1 = getFragmentManager().beginTransaction();
+                ft1.replace(R.id.content, fragment1, "fragment_profile");
+                ft1.commit();
                 break;
             }
 
