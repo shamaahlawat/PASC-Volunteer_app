@@ -18,12 +18,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -54,20 +51,6 @@ public class PersonalDetailsFragment extends Fragment {
         linkedin = (EditText)view. findViewById(R.id.linkedin);
         deptSpinner = (Spinner)view.findViewById(R.id.deptSpinner);
         yearSpinner = (Spinner)view.findViewById(R.id.yearSpinner);
-        firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseFirestore.getInstance().collection("User").document(firebaseAuth.getCurrentUser().getEmail())
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                 @Override
-                                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                                                     ModelUsers md = task.getResult().toObject(ModelUsers.class);
-                                                     if(md!=null && name !=null && github!=null && linkedin != null){
-                                                         name.setText(md.getName());
-                                                         github.setText(md.getGithub());
-                                                         linkedin.setText(md.getLinkedin());
-                                                     }
-                                                 }
-                                             });
 
         ArrayAdapter<String> deptAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.dept_list));

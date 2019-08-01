@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".UsersFragment">
+    tools:context=".fragments.UsersFragment">
 
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/emptyView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/users_recycledView"
-        android:layout_marginBottom="352dp"
+        android:layout_alignTop="@+id/users_recycledView"
+        android:layout_marginTop="271dp"
         android:gravity="center_vertical"
         android:text="Search Users"
         android:textAlignment="center" />

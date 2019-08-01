@@ -16,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.myapplication.classes.TimePicker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -62,7 +63,7 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
         post_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment datePicker = new com.example.myapplication.DatePicker();
+                DialogFragment datePicker = new com.example.myapplication.classes.DatePicker();
                 datePicker.show(getSupportFragmentManager(),"date picker");
             }
         });
@@ -321,6 +322,9 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
                 });
                 finish();
                 startActivity(new Intent(AddPostActivity.this, DashboardActivity.class));
+
+
+
             }
         });
 

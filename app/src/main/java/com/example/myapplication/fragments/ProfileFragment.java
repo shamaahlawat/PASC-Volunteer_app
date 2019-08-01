@@ -1,18 +1,7 @@
 package com.example.myapplication;
 
-import android.Manifest;
-import android.content.ContentUris;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,21 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import androidx.fragment.app.FragmentTransaction;
-
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -112,10 +93,8 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.profile, container, false);
+        View view = inflater.inflate(R.layout.profile, container, false);
         setHasOptionsMenu(true);
-
-        userImage = (ImageView)view.findViewById(R.id.avatarIv);
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
@@ -123,6 +102,24 @@ public class ProfileFragment extends Fragment {
         mRef = firebaseFirestore.collection("User").document(user.getEmail());
         storageReference = FirebaseStorage.getInstance().getReference();
         recyclerView = (RecyclerView) view.findViewById(R.id.rv);
+
+        sv = view.findViewById(R.id.profileScrollView);
+        sv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
+
+                if (scrollY > oldScrollY && DashboardActivity.navigationView.isShown()) {
+                    DashboardActivity.navigationView.setVisibility(View.GONE);
+                }
+                if (scrollY < oldScrollY) {
+                    DashboardActivity.navigationView.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
+
         name = view.findViewById(R.id.name);
         year = view.findViewById(R.id.year);
         dept = view.findViewById(R.id.dept);
@@ -160,7 +157,7 @@ public class ProfileFragment extends Fragment {
                 md.addnew();
                 Iterator<String> itr = md.dom.iterator();
                 Log.d("while11", "onComplete: entered");
-                while (itr.hasNext()) {
+                while(itr.hasNext()) {
                     Log.d("while1", "onComplete: entered");
                     String d = itr.next();
                     switch (d) {
@@ -179,7 +176,7 @@ public class ProfileFragment extends Fragment {
 
                     }
                 }
-                if (md != null) {
+                if(md!=null) {
                     name.setText(md.getName());
                     dept.setText(md.getDept());
                     year.setText(md.getYear());
@@ -219,11 +216,19 @@ public class ProfileFragment extends Fragment {
                     profile_fragment dom = new profile_fragment(getActivity(), domainList);
 
                     recyclerView.setAdapter(dom);
-
+                     /*
+                    try{
+                    //if image is received, then load
+                        Picasso.get().load(image).into(profilePic);
+                    }catch (Exception e){
+                        //if error occurs, then set default
+                        Picasso.get().load(R.drawable.ic_addphoto_white).into(avatar);
+                    }
+                    */
                 }
-
             }
         });
+
 
         return view;
     }

@@ -1,52 +1,39 @@
-package com.example.myapplication;
+package com.example.myapplication.fragments;
 
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.core.view.MenuCompat;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.DashboardActivity;
+import com.example.myapplication.adapters.ExampleAdapter;
+import com.example.myapplication.LoginActivity;
+import com.example.myapplication.R;
+import com.example.myapplication.classes.ModelUsers;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
 
 
 /**
@@ -56,13 +43,13 @@ public class UsersFragment extends Fragment {
 
     RecyclerView recyclerView;
     private RecyclerView.Adapter Adapter;
-
     ArrayList<ModelUsers> usersList;
 
     FirebaseFirestore db;
     FirebaseAuth firebaseAuth;
 
-    TextView data;
+    TextView emptyView;
+
 
 
     public UsersFragment() {
@@ -77,12 +64,34 @@ public class UsersFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_users, container, false);
         setHasOptionsMenu(true);
 
+        emptyView = view.findViewById(R.id.emptyView);
         usersList = new ArrayList<ModelUsers>();
         firebaseAuth = FirebaseAuth.getInstance();
         db =  FirebaseFirestore.getInstance();
         recyclerView = view.findViewById(R.id.users_recycledView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 && DashboardActivity.navigationView.isShown()) {
+                    DashboardActivity.navigationView.setVisibility(View.GONE);
+                } else if (dy < 0 ) {
+                    DashboardActivity.navigationView.setVisibility(View.VISIBLE);
+
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+
 
         return view;
     }
@@ -100,10 +109,11 @@ public class UsersFragment extends Fragment {
 
                         if(!user.getEmail().equals(document.getId())) {
                             //usersList.add(md);
-                            usersList.add(new ModelUsers(md.name,md.year,md.dept));
+                            usersList.add(new ModelUsers(md.getName(),md.getYear(),md.getDept()));
                         }
                         Adapter = new ExampleAdapter(usersList);
                         recyclerView.setAdapter(Adapter);
+                        checkList(usersList);
                     }
                 } else {
                     Toast.makeText(getActivity(), "Action Failed",Toast.LENGTH_SHORT).show();
@@ -112,6 +122,16 @@ public class UsersFragment extends Fragment {
         });
     }
 
+    public void checkList(ArrayList<ModelUsers> usersList){
+        if (usersList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+        else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
+    }
     private void SearchText(final String s){
 
         db.collection("User").get()
@@ -125,7 +145,7 @@ public class UsersFragment extends Fragment {
 
                                 if(!firebaseAuth.getCurrentUser().getEmail().equals(document.getId())) {
                                     if(md.getName().toLowerCase().contains(s.toLowerCase())) {
-                                        usersList.add(new ModelUsers(md.name, md.year, md.dept));
+                                        usersList.add(new ModelUsers(md.getName(), md.getYear(), md.getDept()));
                                     }
                                 }
 

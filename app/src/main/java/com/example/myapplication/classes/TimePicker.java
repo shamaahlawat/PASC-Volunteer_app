@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.classes;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;

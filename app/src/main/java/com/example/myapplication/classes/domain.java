@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.classes;
 
 public class domain {
     private int image;

@@ -4,9 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFF7"
-    tools:context=".ProfileFragment">
-
-    <!-- TODO: Update blank fragment layout -->
+    tools:context=".fragments.ProfileFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

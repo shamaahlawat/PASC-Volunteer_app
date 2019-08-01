@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.R;
+import com.example.myapplication.classes.domain;
+
 import java.util.ArrayList;
 
 public class profile_fragment extends RecyclerView.Adapter<profile_fragment.ViewHolder> {
@@ -18,7 +21,7 @@ public class profile_fragment extends RecyclerView.Adapter<profile_fragment.View
     private Context mContext;
     private ArrayList <domain> dlist;
 
-    profile_fragment(Context context, ArrayList <domain> list)
+    public profile_fragment(Context context, ArrayList <domain> list)
     {
        dlist = list;
         mContext = context;
