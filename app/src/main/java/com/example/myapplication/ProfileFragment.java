@@ -159,7 +159,7 @@ public class ProfileFragment extends Fragment {
                 ModelUsers md = task.getResult().toObject(ModelUsers.class);
                 md.addnew();
                 Iterator<String> itr = md.dom.iterator();
-                Log.d("while11", "onComplete: entered");
+                Log.d("while11","onComplete: entered");
                 while (itr.hasNext()) {
                     Log.d("while1", "onComplete: entered");
                     String d = itr.next();
@@ -189,29 +189,33 @@ public class ProfileFragment extends Fragment {
                     storage = FirebaseStorage.getInstance();
 
                     String image = storageReference.child("avatarIv").toString();
-                    storageReference1 = storage.getReferenceFromUrl(image).child(imgname + ".jpg");
+                    if(!image.equals("gs://fire-demo-1311.appspot.com/avatarIv")) {
+                        storageReference1 = storage.getReferenceFromUrl(image).child(imgname + ".jpg");
 
-                    try {
-                        final File localFile = File.createTempFile("userImage", "jpg");
-                        storageReference1.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                userImage.setImageBitmap(bitmap);
-                                Log.d("falll", "onFailure: ");
+                        try {
+                            final File localFile = File.createTempFile("userImage", "jpg");
+                            storageReference1.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                    userImage.setImageBitmap(bitmap);
+                                    Log.d("falll", "onFailure: ");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    Log.d("failll", "onFailure: ");
+                                }
+                            });
+                        } catch (IOException e) {
+                        }
 
+                        Log.d("imgggg", "onComplete: " + image);
+                    }
+                    else {
+                        userImage.setImageResource(R.drawable.icon_profile);
 
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                Log.d("failll", "onFailure: ");
-                            }
-                        });
-                    } catch (IOException e ) {}
-
-                    Log.d("imgggg", "onComplete: "+image);
-
+                    }
                     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
                     RecyclerView.LayoutManager rvLiLayoutManager = layoutManager;
                     recyclerView.setLayoutManager(rvLiLayoutManager);
