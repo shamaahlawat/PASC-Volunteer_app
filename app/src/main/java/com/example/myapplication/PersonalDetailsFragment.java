@@ -55,6 +55,7 @@ public class PersonalDetailsFragment extends Fragment {
         deptSpinner = (Spinner)view.findViewById(R.id.deptSpinner);
         yearSpinner = (Spinner)view.findViewById(R.id.yearSpinner);
         firebaseAuth = FirebaseAuth.getInstance();
+        next.setEnabled(false);
         FirebaseFirestore.getInstance().collection("User").document(firebaseAuth.getCurrentUser().getEmail())
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                  @Override
@@ -81,9 +82,10 @@ public class PersonalDetailsFragment extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-
-        onNextClicked();
-
+        if (name != null && github != null && linkedin != null) {
+            next.setEnabled(true);
+            onNextClicked();
+        }
 
         return view;
     }
@@ -91,35 +93,37 @@ public class PersonalDetailsFragment extends Fragment {
     private void onNextClicked() {
 
         next.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("name", name.getText().toString().trim());
-                map.put("year",yearSpinner.getSelectedItem().toString().trim());
-                map.put("dept",deptSpinner.getSelectedItem().toString().toUpperCase().trim());
-                map.put("github",github.getText().toString().trim());
-                map.put("linkedin",linkedin.getText().toString().trim());
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("name", name.getText().toString().trim());
+                    map.put("year", yearSpinner.getSelectedItem().toString().trim());
+                    map.put("dept", deptSpinner.getSelectedItem().toString().toUpperCase().trim());
+                    map.put("github", github.getText().toString().trim());
+                    map.put("linkedin", linkedin.getText().toString().trim());
 
 
+                    // add entry to firestore
+                    db.collection("User").document(firebaseAuth.getCurrentUser().getEmail().toString())
+                            .set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            //Toast.makeText(getActivity(), "Profile updated", Toast.LENGTH_SHORT).show();
+                            TechnicalChoiceFragment fragment1 = new TechnicalChoiceFragment();
+                            FragmentTransaction ft1 = getActivity().getSupportFragmentManager().beginTransaction();
+                            ft1.replace(R.id.content, fragment1, "fragment_technical_choice");
+                            ft1.commit();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
-                // add entry to firestore
-                db.collection("User").document(firebaseAuth.getCurrentUser().getEmail().toString())
-                        .set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        //Toast.makeText(getActivity(), "Profile updated", Toast.LENGTH_SHORT).show();
-                        TechnicalChoiceFragment fragment1 = new TechnicalChoiceFragment();
-                        FragmentTransaction ft1 = getActivity().getSupportFragmentManager().beginTransaction();
-                        ft1.replace(R.id.content, fragment1, "fragment_technical_choice");
-                        ft1.commit();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
-                    }
-                });
             }
+
         });
 
     }
