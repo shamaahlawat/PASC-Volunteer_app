@@ -9,12 +9,14 @@ public class ModelUsers {
     String name, year, dept, image;
     String domain1, domain2, domain3;
     String github, linkedin;
+    String email;
     ArrayList<String> dom;
 
-    public ModelUsers(String name, String year, String dept) {
+    public ModelUsers(String name, String year, String dept,String email) {
         this.name = name;
         this.year = year;
         this.dept = dept;
+        this.email = email;
     }
 
     public ModelUsers(String name, String year, String dept, String domain1, String domain2, String domain3, String github, String linkedin) {
@@ -111,5 +113,13 @@ public class ModelUsers {
 
     public void setLinkedin(String linkedin) {
         this.linkedin = linkedin;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

@@ -305,6 +305,10 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
                 map.put("selectedYear", year_user);
                 map.put("selectedDept", dept_user);
                 map.put("selectedDomain", domain_user);
+                if(Title.isEmpty() || Description.isEmpty() || Date == null || Time == null || year_user.isEmpty() || dept_user.isEmpty() || domain_user.isEmpty()) {
+                    Toast.makeText(AddPostActivity.this,"Enter all details",Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 // add entry to firestore
                 db.collection("Post").document()
