@@ -106,10 +106,10 @@ public class UsersFragment extends Fragment {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         ModelUsers md = document.toObject(ModelUsers.class);
-
+                        Toast.makeText(getActivity(),document.getId(),Toast.LENGTH_SHORT).show();
                         if(!user.getEmail().equals(document.getId())) {
                             //usersList.add(md);
-                            usersList.add(new ModelUsers(md.getName(),md.getYear(),md.getDept()));
+                            usersList.add(new ModelUsers(md.name,md.year,md.dept,md.email));
                         }
                         Adapter = new ExampleAdapter(usersList);
                         recyclerView.setAdapter(Adapter);
@@ -142,10 +142,10 @@ public class UsersFragment extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 ModelUsers md = document.toObject(ModelUsers.class);
-
+                                md.setEmail(document.getId());
                                 if(!firebaseAuth.getCurrentUser().getEmail().equals(document.getId())) {
                                     if(md.getName().toLowerCase().contains(s.toLowerCase())) {
-                                        usersList.add(new ModelUsers(md.getName(), md.getYear(), md.getDept()));
+                                        usersList.add(new ModelUsers(md.name, md.year, md.dept,md.email));
                                     }
                                 }
 

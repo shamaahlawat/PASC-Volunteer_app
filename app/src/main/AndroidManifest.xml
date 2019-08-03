@@ -21,7 +21,6 @@
         <meta-data android:name="com.example.myapplication.MyGlideModule"
             android:value="GlideModule"
             tools:node="remove" />
-
         <activity android:name=".RegistrationFormActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,9 +31,9 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity" />
         <activity android:name=".AddPostActivity" />
-        <activity android:name=".ProfileFragment">
+        <activity android:name=".DisplayProfileActivity"/>
+        <activity android:name=".ProfileFragment"/>
 
-        </activity>
         <activity android:name=".DashboardActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -196,6 +196,8 @@ public class HomeFragment extends Fragment {
             }
         });
         super.onCreateOptionsMenu(menu, inflater);
+
+        menu.findItem(R.id.action_edit).setVisible(false);
     }
 
     //handle option clicks
