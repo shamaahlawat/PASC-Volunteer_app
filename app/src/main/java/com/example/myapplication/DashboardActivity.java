@@ -1,22 +1,20 @@
 package com.example.myapplication;
 
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.PopupMenu;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class DashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     FirebaseAuth firebaseAuth;
     ActionBar actionBar;
@@ -91,4 +89,10 @@ public class DashboardActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+
+        Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+        return true;
+    }
 }
