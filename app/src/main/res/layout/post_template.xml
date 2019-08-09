@@ -5,21 +5,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="2dp"
     android:layout_marginTop="10dp">
-<LinearLayout
+
+    <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/textView_title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
+
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold" />
 
-    <TextView
+        <TextView
+            android:id="@+id/textView_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="300dp"
+            android:layout_toRightOf="@+id/textView_title"
+            android:text="&#8942;"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <TextView
+            android:id="@+id/textView_owner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_title"
+            android:text="TextView"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <TextView
         android:id="@+id/textView_description"
+            android:layout_below="@+id/textView_owner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
@@ -29,6 +50,7 @@
         android:id="@+id/textView_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_description"
         android:text="TextView"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -37,7 +59,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
+        android:layout_below="@+id/textView_date"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-</LinearLayout>
+        <CheckBox
+            android:id="@+id/interestedCB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_time"
+            android:text="Interested" />
+
+    </RelativeLayout>
+
+
 </androidx.cardview.widget.CardView>

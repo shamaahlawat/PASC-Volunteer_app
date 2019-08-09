@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,11 +15,13 @@ import com.example.myapplication.fragments.UsersFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class DashboardActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
     ActionBar actionBar;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     public static BottomNavigationView navigationView;
 
 
@@ -33,6 +36,7 @@ public class DashboardActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.navigation);
         navigationView.setOnNavigationItemSelectedListener(selectedListener);
         navigationView.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
+
 
 
 
@@ -89,5 +93,6 @@ public class DashboardActivity extends AppCompatActivity {
         super.onBackPressed();
         finish();
     }
+
 
 }

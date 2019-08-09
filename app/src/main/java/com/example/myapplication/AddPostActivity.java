@@ -1,9 +1,5 @@
 package com.example.myapplication;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -12,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -33,16 +30,23 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
 
     private EditText post_title;
     private EditText post_description;
-    private Button save_post, select_users;
-
-    String Title,Description,Date,Time;
+    public String Description;
+    String Title, Date, Time, TypeOfPost, OwnerOfPost, id;
+    String email;
+    //String Title,Description,Date,Time;
     String[] listItems;
+    FirebaseAuth firebaseAuth;
+    //    private Button save_post;
+    private CheckBox cb1;
+    private Button save_post, select_users;
+    private CheckBox cb2;
     ArrayList<String> dept_user, year_user, domain_user;
     boolean[] checkedItems;
     ArrayList<Integer> mUserItems = new ArrayList<>();
 
 
     FirebaseFirestore db;
+    private CheckBox cb3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,9 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
         post_title = findViewById(R.id.nameET);
         post_description = findViewById(R.id.DescET);
         save_post = findViewById(R.id.Save);
+        cb1 = findViewById(R.id.inviteCB);
+        cb2 = findViewById(R.id.updateCB);
+        cb3 = findViewById(R.id.interestedCB);
 
         select_users = findViewById(R.id.selectMultipleUsers);
 
@@ -285,16 +292,40 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
         Time = DateFormat.getTimeInstance().format(c.getTime());
     }
 
+    public String checkBoxMethod() {
+        String type = " ";
+        if (cb1.isChecked()) {
+            type = "INVITE";
+            cb2.setEnabled(false);
+        } else if (cb2.isChecked()) {
+            type = "UPDATE";
+            cb1.setEnabled(false);
+            cb3.setVisibility(View.GONE);
+
+        }
+        return type;
+    }
+
     public void onSavePostClicked(){
         save_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                if (cb1.isChecked()) {
+
+                    cb2.setEnabled(false);
+                } else if (cb2.isChecked()) {
+
+                    cb1.setEnabled(false);
+                    cb3.setVisibility(View.GONE);
+
+                }
                 //Date = post_date.getText().toString().trim();
                 Title = post_title.getText().toString().trim();
+                id = Title + Time;
                 Description = post_description.getText().toString().trim();
-
-                String email = FirebaseAuth.getInstance().getCurrentUser().getEmail().toString();
+                TypeOfPost = checkBoxMethod();
+                OwnerOfPost = FirebaseAuth.getInstance().getCurrentUser().getEmail().toString();
                 //add values to the resp fields
                 Map<String, Object> map = new HashMap<>();
                 map.put("Title", Title);
@@ -302,7 +333,11 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
                 map.put("Date",Date);
                 map.put("Time",Time);
                 map.put("Timestamp", FieldValue.serverTimestamp());
-                map.put("userId",email);
+                //map.put("userId",email);
+                map.put("Type", TypeOfPost);
+                map.put("OwnerOfPost", OwnerOfPost);
+                map.put("id", id);
+                // Map<String, Object> map2 = new HashMap<>();
                 map.put("selectedYear", year_user);
                 map.put("selectedDept", dept_user);
                 map.put("selectedDomain", domain_user);
@@ -312,11 +347,11 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
                 }
 
                 // add entry to firestore
-                db.collection("Post").document()
-                        .set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+
+                db.collection("Post").document(id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(AddPostActivity.this, "Post updated", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddPostActivity.this, "Profile updated", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -324,6 +359,8 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
                         Toast.makeText(AddPostActivity.this, "Error!", Toast.LENGTH_SHORT).show();
                     }
                 });
+
+
                 finish();
                 startActivity(new Intent(AddPostActivity.this, DashboardActivity.class));
 
