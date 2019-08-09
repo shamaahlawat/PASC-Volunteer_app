@@ -2,8 +2,6 @@ package com.example.myapplication;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -13,12 +11,13 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-public class DashboardActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+public class DashboardActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
     ActionBar actionBar;
-
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,10 +88,5 @@ public class DashboardActivity extends AppCompatActivity implements PopupMenu.On
         finish();
     }
 
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
 
-        Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
-        return true;
-    }
 }

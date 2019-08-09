@@ -1,15 +1,11 @@
 package com.example.myapplication;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,8 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -30,14 +24,14 @@ import java.util.Map;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
+    PopUpEventListener p;
     private ArrayList<ModelPosts> PostList;
     public Context mCntxt;
     public Context context;
     public String nameOfInterested = FirebaseAuth.getInstance().getCurrentUser().getEmail().toString();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    PopupMenu.OnMenuItemClickListener p;
 
-    public PostAdapter(ArrayList<ModelPosts> postList, PopupMenu.OnMenuItemClickListener p) {
+    public PostAdapter(ArrayList<ModelPosts> postList, PopUpEventListener p) {
         // mCntxt=context1;
         //context=context2;
         this.p = p;
@@ -68,44 +62,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
                             switch (item.getItemId()) {
                                 case R.id.EditPost: {
-
-                                    DocumentSnapshot ds = null;
-                                    String s = ds.getString("Description");
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getRootView().getContext());
-                                    builder.setTitle("Edit Post:");
-                                    final EditText et = new EditText(v.getContext());
-                                    et.setText(s);
-                                    builder.setView(et);
-                                    builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            String docid = db.collection("Post").document(currentPost.ownerOfPost).getId();
-                                            String newdesc = et.getText().toString();
-                                            DocumentReference dr = db.collection("Post").document(docid);
-                                            dr.update("Description", newdesc);
-                                            Toast.makeText(mCntxt, "Successfull", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                    builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.cancel();
-                                            dialog.dismiss();
-                                        }
-                                    });
-                                    Dialog dialog = builder.create();
-                                    dialog.show();
-                                    dialog.getWindow().setBackgroundDrawableResource(android.R.color.holo_blue_bright);
-                                }
-                                break;
-                                case R.id.ViewList: {
-
+                                    p.onEdit(currentPost.description, currentPost.id);
                                     break;
                                 }
-
+                                case R.id.ViewList: {
+                                    p.onViewList();
+                                    break;
+                                }
                             }
-
-
                             return false;
                         }
                     });
@@ -142,6 +106,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 }
             }
         });
+    }
+
+    public interface PopUpEventListener {
+
+        void onViewList();
+
+        void onEdit(String description, String id);
     }
 
 

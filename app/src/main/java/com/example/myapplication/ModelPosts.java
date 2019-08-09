@@ -5,18 +5,24 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class ModelPosts {
     String title, description, date, time, type, ownerOfPost;
+    String id;
 
 
-
-    public ModelPosts(String title, String description, String date, String time) {
+    public ModelPosts(String title, String description, String date, String time, String type, String ownerOfPost, String id) {
         this.title = title;
         this.description = description;
         this.date = date;
         this.time = time;
         this.type = type;
         this.ownerOfPost = ownerOfPost;
+        this.id = id;
+        
     }
 
+
+    public String getId() {
+        return id;
+    }
 
     public String getType() {
         return type;

@@ -210,6 +210,9 @@ import java.util.ArrayList;
 package com.example.myapplication;
 
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -218,7 +221,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
+import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -231,6 +234,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -243,7 +247,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements PostAdapter.PopUpEventListener {
 
     RecyclerView P_recyclerView;
     RecyclerView.Adapter P_adapter;
@@ -302,7 +306,7 @@ public class HomeFragment extends Fragment {
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             ModelPosts md = new ModelPosts(document.get("Title").toString(), document.get("Description").toString(),
-                                    document.get("Date").toString(), document.get("Time").toString());  //sanam
+                                    document.get("Date").toString(), document.get("Time").toString(), document.get("Type").toString(), document.get("OwnerOfPost").toString(), document.get("id").toString());  //sanam
 
 
                             if (((ArrayList<String>) document.get("selectedDept")).contains(currentUser.getDept()) &&
@@ -310,11 +314,11 @@ public class HomeFragment extends Fragment {
                                             ((ArrayList<String>) document.get("selectedDomain")).contains(currentUser.getDomain2()) ||
                                             ((ArrayList<String>) document.get("selectedDomain")).contains(currentUser.getDomain3()))) {
 
-                                postsList.add(new ModelPosts(md.title, md.description, md.date, md.time));
+                                postsList.add(new ModelPosts(md.title, md.description, md.date, md.time, md.type, md.ownerOfPost, md.id));
                             }
 
 
-                            P_adapter = new PostAdapter(postsList, (PopupMenu.OnMenuItemClickListener) getActivity());
+                            P_adapter = new PostAdapter(postsList, HomeFragment.this);
                             P_recyclerView.setAdapter(P_adapter);
 
                         }
@@ -344,10 +348,10 @@ public class HomeFragment extends Fragment {
                                 if (document.get("Title").toString().toLowerCase().contains(s.toLowerCase())
                                         || document.get("userId").toString().toLowerCase().contains(s.toLowerCase())) {
                                     ModelPosts md = new ModelPosts(document.get("Title").toString(),
-                                            document.get("Description").toString(), document.get("Date").toString(), document.get("Time").toString());
+                                            document.get("Description").toString(), document.get("Date").toString(), document.get("Time").toString(), document.get("Type").toString(), document.get("OwnerOfPost").toString(), document.get("id").toString());
                                     postsList.add(md);  //sanam
                                 }
-                                P_adapter = new PostAdapter(postsList, (PopupMenu.OnMenuItemClickListener) getActivity());
+                                P_adapter = new PostAdapter(postsList, HomeFragment.this);
                                 P_recyclerView.setAdapter(P_adapter);
                             }
 
@@ -412,4 +416,38 @@ public class HomeFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onEdit(String desc, final String docid) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("EDIT : ");
+        final EditText et = new EditText(getContext());
+        et.setText(desc);
+        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newdesc = et.getText().toString();
+                DocumentReference dr = db.collection("Post").document(docid);
+                dr.update("Description", newdesc);
+                Toast.makeText(getContext(), "Successfull", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                dialog.dismiss();
+            }
+        });
+        Dialog dialog = builder.create();
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.holo_blue_bright);
+    }
+
+
+    @Override
+    public void onViewList() {
+
+        Intent intent = new Intent(getActivity(), ViewListActivity.class);
+        startActivity(intent);
+    }
 }

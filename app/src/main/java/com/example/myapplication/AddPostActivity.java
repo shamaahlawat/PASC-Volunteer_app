@@ -34,7 +34,7 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
     private EditText post_title;
     private EditText post_description;
     public String Description;
-    String Title, Date, Time, TypeOfPost;
+    String Title, Date, Time, TypeOfPost, OwnerOfPost, id;
     String email;
     //String Title,Description,Date,Time;
     String[] listItems;
@@ -314,11 +314,21 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
             @Override
             public void onClick(View v) {
 
+                if (cb1.isChecked()) {
+
+                    cb2.setEnabled(false);
+                } else if (cb2.isChecked()) {
+
+                    cb1.setEnabled(false);
+                    cb3.setVisibility(View.GONE);
+
+                }
                 //Date = post_date.getText().toString().trim();
                 Title = post_title.getText().toString().trim();
+                id = Title + Time;
                 Description = post_description.getText().toString().trim();
-
-                String email = FirebaseAuth.getInstance().getCurrentUser().getEmail().toString();
+                TypeOfPost = checkBoxMethod();
+                OwnerOfPost = FirebaseAuth.getInstance().getCurrentUser().getEmail().toString();
                 //add values to the resp fields
                 Map<String, Object> map = new HashMap<>();
                 map.put("Title", Title);
@@ -326,10 +336,11 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
                 map.put("Date",Date);
                 map.put("Time",Time);
                 map.put("Timestamp", FieldValue.serverTimestamp());
-                map.put("userId",email);
+                //map.put("userId",email);
                 map.put("Type", TypeOfPost);
-
-                Map<String, Object> map2 = new HashMap<>();
+                map.put("OwnerOfPost", OwnerOfPost);
+                map.put("id", id);
+                // Map<String, Object> map2 = new HashMap<>();
                 map.put("selectedYear", year_user);
                 map.put("selectedDept", dept_user);
                 map.put("selectedDomain", domain_user);
@@ -339,9 +350,8 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
                 }
 
                 // add entry to firestore
-                String id = db.collection("Post").document().getId();
-                db.collection("Post").document(id)
-                        .set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+
+                db.collection("Post").document(id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(AddPostActivity.this, "Profile updated", Toast.LENGTH_SHORT).show();
@@ -353,9 +363,7 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
                     }
                 });
 
-                if (TypeOfPost == "INVITE") {
-                    db.collection("Post").document(id).collection("Interested"); //sanam
-                }
+
                 finish();
                 startActivity(new Intent(AddPostActivity.this, DashboardActivity.class));
             }
