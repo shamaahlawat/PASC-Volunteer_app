@@ -13,12 +13,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.DisplayProfileActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.classes.ModelUsers;
 
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
+
 
 import java.util.ArrayList;
 

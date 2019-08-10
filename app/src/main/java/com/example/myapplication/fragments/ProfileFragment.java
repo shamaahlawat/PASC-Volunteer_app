@@ -1,7 +1,21 @@
-package com.example.myapplication;
+package com.example.myapplication.fragments;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.ContentUris;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -9,24 +23,45 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.DashboardActivity;
+import com.example.myapplication.LoginActivity;
+import com.example.myapplication.ViewListActivity;
+import com.example.myapplication.adapters.PostAdapter;
+import com.example.myapplication.adapters.myPostsProfileAdapter;
+import com.example.myapplication.classes.ModelPosts;
+import com.example.myapplication.fragments.PersonalDetailsFragment;
+import com.example.myapplication.R;
+import com.example.myapplication.adapters.profile_fragment;
+import com.example.myapplication.classes.ModelUsers;
+import com.example.myapplication.classes.domain;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -50,7 +85,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements myPostsProfileAdapter.PopUpEventListener{
 
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
@@ -63,11 +98,12 @@ public class ProfileFragment extends Fragment {
     private Uri imageUri = null;
     private Bitmap compressed;
     private StorageReference storageReference, storageReference1;
+    private Button viewmyPosts;
 
 
     ArrayList <domain> domainList;
-
-    RecyclerView recyclerView;
+    ArrayList<ModelPosts> myposts;
+    RecyclerView recyclerView, recyclerViewPost;
 
     private static final String NAME = "name";
     private static final String YEAR = "year";
@@ -75,6 +111,7 @@ public class ProfileFragment extends Fragment {
 
     private String imgname;
 
+    NestedScrollView sv;
     ImageView profilePic;
     TextView name,dept,year,linkedin,git;
 
@@ -94,6 +131,7 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.profile, container, false);
+
         setHasOptionsMenu(true);
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -102,6 +140,16 @@ public class ProfileFragment extends Fragment {
         mRef = firebaseFirestore.collection("User").document(user.getEmail());
         storageReference = FirebaseStorage.getInstance().getReference();
         recyclerView = (RecyclerView) view.findViewById(R.id.rv);
+        recyclerViewPost = (RecyclerView) view.findViewById(R.id.rvPosts);
+        viewmyPosts = view.findViewById(R.id.showPostButton);
+
+        viewmyPosts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPosts();
+            }
+        });
+
 
         sv = view.findViewById(R.id.profileScrollView);
         sv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
@@ -125,6 +173,7 @@ public class ProfileFragment extends Fragment {
         dept = view.findViewById(R.id.dept);
         linkedin = view.findViewById(R.id.linkedin);
         git = view.findViewById(R.id.github);
+        userImage = view.findViewById(R.id.avatarIv);
 
         domainList = new ArrayList<>();
         userImage.setOnClickListener(new View.OnClickListener() {
@@ -152,8 +201,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-
-                ModelUsers md = task.getResult().toObject(ModelUsers.class);
+                final ModelUsers md = task.getResult().toObject(ModelUsers.class);
                 md.addnew();
                 Iterator<String> itr = md.dom.iterator();
                 Log.d("while11","onComplete: entered");
@@ -173,7 +221,6 @@ public class ProfileFragment extends Fragment {
                             domainList.add(new domain(R.drawable.maclearn, d));
                             break;
                         }
-
                     }
                 }
                 if(md!=null) {
@@ -211,24 +258,15 @@ public class ProfileFragment extends Fragment {
                     }
                     else {
                         userImage.setImageResource(R.drawable.icon_profile);
-
                     }
+
                     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-                    RecyclerView.LayoutManager rvLiLayoutManager = layoutManager;
+                    final RecyclerView.LayoutManager rvLiLayoutManager = layoutManager;
                     recyclerView.setLayoutManager(rvLiLayoutManager);
-
                     profile_fragment dom = new profile_fragment(getActivity(), domainList);
-
                     recyclerView.setAdapter(dom);
-                     /*
-                    try{
-                    //if image is received, then load
-                        Picasso.get().load(image).into(profilePic);
-                    }catch (Exception e){
-                        //if error occurs, then set default
-                        Picasso.get().load(R.drawable.ic_addphoto_white).into(avatar);
-                    }
-                    */
+
+
                 }
             }
         });
@@ -236,6 +274,8 @@ public class ProfileFragment extends Fragment {
 
         return view;
     }
+
+
 
     @Override
     public void onResume() {
@@ -294,12 +334,12 @@ public class ProfileFragment extends Fragment {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(getContext(), "User Data is Stored Successfully", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), "User Data is Stored Successfully", Toast.LENGTH_LONG).show();
 
                             } else {
 
                                 String error = task.getException().getMessage();
-                                Toast.makeText(getContext(), "(FIRESTORE Error) : " + error, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), "(FIRESTORE Error) : " + error, Toast.LENGTH_LONG).show();
 
                             }
 
@@ -520,6 +560,86 @@ public class ProfileFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showPosts() {
+        myposts = new ArrayList<>();
+        if(viewmyPosts.getText().toString().toLowerCase().equals("hide posts") ){
+            viewmyPosts.setText("view posts");
+            myposts.clear();
+            LinearLayoutManager layoutManager1 = new LinearLayoutManager(getActivity());
+            final RecyclerView.LayoutManager rvLiLayoutManager1 = layoutManager1;
+            myPostsProfileAdapter ma = new myPostsProfileAdapter(myposts, ProfileFragment.this);
+            recyclerViewPost.setLayoutManager(rvLiLayoutManager1);
+            recyclerViewPost.setAdapter(ma);
+            Log.d("PROF FRAG", "FUNC CALLED");
+        }
+        else if(viewmyPosts.getText().toString().toLowerCase().equals("view posts") ){
+            viewmyPosts.setText("hide posts");
+            FirebaseFirestore.getInstance().collection("Post").whereEqualTo("OwnerOfPost", firebaseAuth.getCurrentUser().getEmail()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    for(QueryDocumentSnapshot document : task.getResult()){
+
+                        ModelPosts md = new ModelPosts(document.get("Title").toString(), document.get("Description").toString(),
+                                document.get("Date").toString(), document.get("Time").toString(), document.get("Type").toString(),
+                                document.get("OwnerOfPost").toString(), document.get("id").toString());  //sanam
+                        md.setTimeStamp((Timestamp) document.get("Timestamp"));
+                        myposts.add(md);
+
+                        LinearLayoutManager layoutManager1 = new LinearLayoutManager(getActivity());
+                        final RecyclerView.LayoutManager rvLiLayoutManager1 = layoutManager1;
+                        myPostsProfileAdapter ma = new myPostsProfileAdapter(myposts, ProfileFragment.this);
+                        recyclerViewPost.setLayoutManager(rvLiLayoutManager1);
+                        recyclerViewPost.setAdapter(ma);
+                        Log.d("PROF FRAG", "FUNC CALLED");
+                    }
+
+                    }
+            });
+        }
+
+
+
+    }
+
+
+
+    @Override
+    public void onEdit(String desc, final String docid) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("EDIT : ");
+        final EditText et = new EditText(getContext());
+        et.setText(desc);
+        builder.setView(et);
+        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newdesc = et.getText().toString();
+                DocumentReference dr = FirebaseFirestore.getInstance().collection("Post").document(docid);
+                dr.update("Description", newdesc);
+                Toast.makeText(getContext(), "Successfull", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                dialog.dismiss();
+            }
+        });
+        Dialog dialog = builder.create();
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.holo_blue_bright);
+    }
+
+
+    @Override
+    public void onViewList(String docid) {
+
+        Intent intent = new Intent(getActivity(), ViewListActivity.class);
+        intent.putExtra("POST_ID", docid);
+        startActivity(intent);
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -18,7 +19,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 public class ViewListActivity extends AppCompatActivity {
-    public List<String> nameslist = new ArrayList<>();
+    public ArrayList<String> nameslist = new ArrayList<>();
     ListView listView;
     FirebaseFirestore db;
     ArrayAdapter<String> adapter;
@@ -28,14 +29,17 @@ public class ViewListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_list);
         listView = (ListView) findViewById(R.id.LView);
-        adapter = new ArrayAdapter<String>(this, R.layout.retrieve_name, nameslist);
-        db.collection("Posts").document().collection("Interested").addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+        String id=getIntent().getStringExtra("POST_ID");
+        db = FirebaseFirestore.getInstance();
+        db.collection("Post").document(id).collection("Interested People").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
                 for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
                     nameslist.add(snapshot.getString("name"));
                 }
+                adapter = new ArrayAdapter<String>(ViewListActivity.this, R.layout.retrieve_name, nameslist);
                 adapter.notifyDataSetChanged();
                 listView.setAdapter(adapter);
             }

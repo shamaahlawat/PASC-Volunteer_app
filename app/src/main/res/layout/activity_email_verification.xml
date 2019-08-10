@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EmailVerificationActivity"
+    android:orientation="vertical"
+    android:background="@color/colorWhite">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:orientation="vertical"
+                android:padding="10dp"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <ImageView
+                    android:layout_width="336dp"
+                    android:layout_height="143dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="15dp"
+                    android:padding="16dp"
+                    android:backgroundTint="#bbb"
+                    android:src="@drawable/pasc" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PICT ACM student chapter (PASC) was established in 2011 with a view of fostering technical and non-technical qualities in an individual and helping them to shape their destiny. PASC started off with 4 founding members and in such a short period, PASC has grown to a big student chapter of nearly more than 300 ACM members. Appreciating our endeavour, PASC is awarded as BEST ACM STUDENT CHAPTER in India, on February 2018."
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:layout_width="180dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="25dp"
+                    android:background="@drawable/button_style_2"
+                    android:text="Learn More"
+                    android:textSize="14sp"
+                    android:textColor="@color/colorWhite" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginBottom="15dp"
+                android:background="@color/colorWhite"
+                android:orientation="vertical">
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/emailTil"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:textColorHint="#bbb"
+                    app:errorTextAppearance="@style/emailErrorAppearance">
+
+                    <EditText
+                        android:id="@+id/Email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp"
+                        android:ems="10"
+                        android:hint="Email Id"
+                        android:inputType="textPersonName"
+                        android:textAlignment="center"
+                        android:textSize="18sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/RegisterButton"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="25dp"
+                    android:background="@drawable/button_style_1"
+                    android:text="Verify email"
+                    android:textColor="@color/colorWhite"
+                    android:textColorHint="@color/colorWhite">
+
+                </Button>
+
+
+                <TextView
+                    android:id="@+id/loginLink"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="55dp"
+                    android:text="Already have an account? Login"
+                    android:textAlignment="center"
+                    android:textColor="#888" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

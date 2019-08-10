@@ -1,23 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".LoginActivity"
+    android:background="@color/colorPrimaryDark">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:orientation="vertical"
-       >
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+
+
+            <ImageView
+                android:layout_width="336dp"
+                android:layout_height="143dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="50dp"
+                android:padding="16dp"
+                android:backgroundTint="#bbb"
+                android:src="@drawable/pasc" />
+
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/emailTil">
+            android:id="@+id/emailTil"
+            android:textColorHint="@color/colorWhite">
             <EditText
                 android:layout_margin="15dp"
                 android:id="@+id/LoginEmail"
@@ -25,7 +51,9 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:hint="Email Id" />
+                android:hint="Email Id"
+                android:backgroundTint="@color/colorWhite"
+                android:textCursorDrawable="@drawable/cursor_color"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -33,7 +61,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/pwdTil"
-
+            android:textColorHint="@color/colorWhite"
+            app:passwordToggleTint="@color/colorWhite"
             app:passwordToggleEnabled="true">
             <EditText
                 android:layout_margin="15dp"
@@ -41,8 +70,9 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:ems="10"
+                android:backgroundTint="@color/colorWhite"
                 android:id="@+id/LoginPassword"  android:hint="password"
-
+                android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="18sp"/>
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -50,10 +80,14 @@
 
 
         <Button
-            android:layout_margin="15dp"
+            android:layout_margin="25dp"
             android:text="Sign In"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:id="@+id/SigninButton"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/button_style_1"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/SigninButton"
             />
 
         <TextView
@@ -62,6 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="12dp"
             android:text="Forgot Password? Click here"
+            android:textColor="#bbb"
             android:textAlignment="center" />
 
         <com.google.android.gms.common.SignInButton
@@ -71,31 +106,29 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
             android:layout_below="@+id/ForgotPasswordLink"
+            app:colorScheme="dark"
+            app:buttonSize="icon_only"
+            android:backgroundTint="@color/colorPrimaryDark"
             ></com.google.android.gms.common.SignInButton>
+
+
+        <TextView
+            android:id="@+id/SignUpLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="29dp"
+            android:textColor="#bbb"
+            android:text="Do not have an account? Sign up here"
+            android:textAlignment="center" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="79dp"
-        android:fontFamily="monospace"
-        android:text="User Login"
-        android:textAlignment="center"
-        android:textSize="30sp" />
 
-    <TextView
-        android:id="@+id/SignUpLink"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="29dp"
-        android:text="Do not have an account? Sign up here"
-        android:textAlignment="center" />
+</ScrollView>
 
-</RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

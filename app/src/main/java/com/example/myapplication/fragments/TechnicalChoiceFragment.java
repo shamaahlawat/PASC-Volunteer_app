@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +18,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.DashboardActivity;
+import com.example.myapplication.R;
+import com.example.myapplication.classes.ModelUsers;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

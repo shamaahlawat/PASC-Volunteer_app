@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -18,9 +18,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.R;
+import com.example.myapplication.classes.ModelUsers;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -37,7 +42,7 @@ public class PersonalDetailsFragment extends Fragment {
     FirebaseAuth firebaseAuth;
     FirebaseFirestore db;
 
-    PersonalDetailsFragment(){
+    public PersonalDetailsFragment(){
 
     }
     @Override

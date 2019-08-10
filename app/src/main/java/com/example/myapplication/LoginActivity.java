@@ -40,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 100;
     GoogleSignInClient mGoogleSignInClient;
 
+
     ProgressDialog progressDialog;
     Button signInButton;
     SignInButton googleSignIn;
@@ -54,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Login");
+        actionBar.hide();
 
 
         signInButton = (Button)findViewById(R.id.SigninButton);
@@ -71,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
+
 
         mGoogleSignInClient = GoogleSignIn.getClient(LoginActivity.this, gso);
 
@@ -100,12 +102,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())                {
                     userEmail.setError("Invalid email address");
-                    userEmail.setFocusable(true);
-                    return;
-                    //no further execution
-                }
-                if(pwd.length() < 8){
-                    userEmail.setError("Password length at least 8 charachters");
                     userEmail.setFocusable(true);
                     return;
                     //no further execution
@@ -144,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                startActivity(new Intent(LoginActivity.this, EmailVerificationActivity.class));
             }
         });
 
@@ -216,6 +212,11 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    private void signIn() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -235,6 +236,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
@@ -247,21 +249,18 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
-                            finish();
-                            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
-                            Toast.makeText(LoginActivity.this, "sdsdsdgsgd", Toast.LENGTH_SHORT).show();
-
+                            //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "sdsdsdgsgd", Toast.LENGTH_SHORT).show();
+                            //Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+                            //updateUI(null);
                         }
 
                         // ...
                     }
                 });
     }
-
 
 
 }

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.classes;
 
 import android.util.Log;
 
@@ -11,7 +11,7 @@ public class ModelUsers {
     String github, linkedin;
     public ArrayList<String> dom;
     String email;
-    ArrayList<String> dom;
+
 
     public ModelUsers(String name, String year, String dept,String email) {
         this.name = name;

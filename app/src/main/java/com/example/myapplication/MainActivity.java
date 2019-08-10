@@ -1,9 +1,9 @@
 package com.example.myapplication;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -23,8 +24,9 @@ public class MainActivity extends AppCompatActivity {
 
     ProgressDialog progressDialog;
     Button registerButton;
-    TextView loginLink;
-    EditText userEmail, userPassword;
+    TextView loginLink,userEmail;
+    EditText  userPassword, userPassword2;
+    TextInputLayout t1,t2;
 
     FirebaseAuth firebaseAuth;
 
@@ -32,26 +34,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ActionBar actionBar =  getSupportActionBar();
+        actionBar.hide();
+
 
 
         registerButton = (Button)findViewById(R.id.SigninButton);
-        userEmail = (EditText)findViewById(R.id.userEmail);
+        userEmail = (TextView)findViewById(R.id.userEmail);
         userPassword = (EditText)findViewById(R.id.userPassword);
+        userPassword2 = (EditText)findViewById(R.id.userPassword2);
         loginLink = (TextView) findViewById(R.id.loginLink);
         progressDialog = new ProgressDialog(this);
+        t1 = findViewById(R.id.pwdTil);
+        t2 = findViewById(R.id.pwd2Til);
 
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        if(firebaseAuth.getCurrentUser() != null){
-            //start prof
-            finish();
-            startActivity(new Intent(MainActivity.this, DashboardActivity.class));
-        }
+
+        Intent intent = getIntent();
+        userEmail.setText("Email ID: " + intent.getStringExtra(EmailVerificationActivity.EXTRA_TEXT));
 
         onRegisterButtonClicked();
         onLoginLinkClicked();
-
-
 
     }
 
@@ -62,22 +65,23 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                final String email = userEmail.getText().toString().trim();
+                final String pwd2 = userPassword2.getText().toString().trim();
                 final String pwd = userPassword.getText().toString().trim();
 
-                if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())                {
-                    userEmail.setError("Invalid email address");
-                    userEmail.setFocusable(true);
-                    return;
-                    //no further execution
-                }
+
                 if(pwd.length() < 8){
-                    userEmail.setError("Password length at least 8 charachters");
-                    userEmail.setFocusable(true);
+                    t1.setError("Password length at least 8 charachters");
+                    t1.setFocusable(true);
                     return;
                     //no further execution
                 }
 
+                if(!pwd.equals(pwd2)){
+                    t2.setError("Password length at least 8 charachters");
+                    t2.setFocusable(true);
+                    return;
+                    //no further execution
+                }
                 //if valid
                 progressDialog.setMessage("Registering user... ");
 
@@ -85,14 +89,14 @@ public class MainActivity extends AppCompatActivity {
 
                 //create user entry in firebase
 
-                firebaseAuth.createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                firebaseAuth.createUserWithEmailAndPassword(userEmail.getText().toString().trim(), pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                                 progressDialog.dismiss();
                                 if (task.isSuccessful()) {
                                     Toast.makeText(MainActivity.this, "Registration successful...", Toast.LENGTH_SHORT).show();
-                                    firebaseAuth.signInWithEmailAndPassword(email,pwd).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                                    firebaseAuth.signInWithEmailAndPassword(userEmail.getText().toString().trim(),pwd).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                         @Override
                                         public void onComplete(@NonNull Task<AuthResult> task) {
 

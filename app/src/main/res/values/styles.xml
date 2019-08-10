@@ -8,4 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="emailErrorAppearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/pink</item>
+    </style>
+
 </resources>

@@ -13,6 +13,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+
 import com.example.myapplication.classes.TimePicker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,7 +48,6 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
     boolean[] checkedItems;
     ArrayList<Integer> mUserItems = new ArrayList<>();
 
-
     FirebaseFirestore db;
     private CheckBox cb3;
 
@@ -58,7 +61,7 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
         save_post = findViewById(R.id.Save);
         cb1 = findViewById(R.id.inviteCB);
         cb2 = findViewById(R.id.updateCB);
-        cb3 = findViewById(R.id.interestedCB);
+        //cb3 = findViewById(R.id.interestedCB);
 
         select_users = findViewById(R.id.selectMultipleUsers);
 
@@ -86,15 +89,28 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
 
         db = FirebaseFirestore.getInstance();
 
+        onSelectCheckBox();
         onSelectUsersClicked();
         onSavePostClicked();
 
+    }
 
+    private void onSelectCheckBox() {
 
+        if (cb1.isChecked()) {
+            cb2.setChecked(false);
+            cb3.setVisibility(View.VISIBLE);
+        } else if (cb2.isChecked()) {
+            cb1.setChecked(false);
+            cb3.setVisibility(View.GONE);
+        }
     }
 
     private void onSelectUsersClicked() {
         mUserItems.clear();
+        dept_user.clear();
+        year_user.clear();
+        domain_user.clear();
         select_users.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,13 +121,6 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
                 mBuilder.setMultiChoiceItems(listItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
-//                        if (isChecked) {
-//                            if (!mUserItems.contains(position)) {
-//                                mUserItems.add(position);
-//                            }
-//                        } else if (mUserItems.contains(position)) {
-//                            mUserItems.remove(position);
-//                        }
                         if(isChecked){
                             mUserItems.add(position);
                         }else{
@@ -148,6 +157,7 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
                     public void onClick(DialogInterface dialogInterface, int which) {
                         for (int i = 0; i < listItems.length; i++) {
                             checkedItems[i] = true;
+                            if(!dept_user.contains(listItems[i]))
                             dept_user.add(listItems[i]);
                         }selectUsersBasedOnYear();
                     }
@@ -205,6 +215,7 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
             public void onClick(DialogInterface dialogInterface, int which) {
                 for (int i = 0; i < listItems.length; i++) {
                     checkedItems[i] = true;
+                    if(!year_user.contains(listItems[i]))
                     year_user.add(listItems[i]);
                 }selectUsersBasedOnDomain();
             }
@@ -261,6 +272,7 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
             public void onClick(DialogInterface dialogInterface, int which) {
                 for (int i = 0; i < listItems.length; i++) {
                     checkedItems[i] = true;
+                    if(!domain_user.contains(listItems[i]))
                     domain_user.add(listItems[i]);
                 }
             }
@@ -300,7 +312,7 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
         } else if (cb2.isChecked()) {
             type = "UPDATE";
             cb1.setEnabled(false);
-            cb3.setVisibility(View.GONE);
+          //  cb3.setVisibility(View.GONE);
 
         }
         return type;
@@ -311,15 +323,6 @@ public class AddPostActivity extends AppCompatActivity implements DatePickerDial
             @Override
             public void onClick(View v) {
 
-                if (cb1.isChecked()) {
-
-                    cb2.setEnabled(false);
-                } else if (cb2.isChecked()) {
-
-                    cb1.setEnabled(false);
-                    cb3.setVisibility(View.GONE);
-
-                }
                 //Date = post_date.getText().toString().trim();
                 Title = post_title.getText().toString().trim();
                 id = Title + Time;

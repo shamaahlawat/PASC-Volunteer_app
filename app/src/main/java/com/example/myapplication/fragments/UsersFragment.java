@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -89,8 +90,11 @@ public class UsersFragment extends Fragment {
             }
         });
 
-            recyclerView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
+//            recyclerView.setVisibility(View.GONE);
+//            emptyView.setVisibility(View.VISIBLE);
+
+        getAllUsers();
+
 
 
         return view;
@@ -106,26 +110,29 @@ public class UsersFragment extends Fragment {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         ModelUsers md = document.toObject(ModelUsers.class);
-                        Toast.makeText(getActivity(),document.getId(),Toast.LENGTH_SHORT).show();
+
                         if(!user.getEmail().equals(document.getId())) {
                             //usersList.add(md);
-                            usersList.add(new ModelUsers(md.name,md.year,md.dept,md.email));
+                            usersList.add(new ModelUsers(md.getName(),md.getYear(),md.getDept(),md.getEmail()));
                         }
                         Adapter = new ExampleAdapter(usersList);
                         recyclerView.setAdapter(Adapter);
-                        checkList(usersList);
+
                     }
                 } else {
                     Toast.makeText(getActivity(), "Action Failed",Toast.LENGTH_SHORT).show();
-                }
+                }checkList(usersList);
             }
         });
     }
 
     public void checkList(ArrayList<ModelUsers> usersList){
         if (usersList.isEmpty()) {
+
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
+            emptyView.setText("No users found.");
+
         }
         else {
             recyclerView.setVisibility(View.VISIBLE);
@@ -133,6 +140,7 @@ public class UsersFragment extends Fragment {
         }
     }
     private void SearchText(final String s){
+
 
         db.collection("User").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -143,11 +151,15 @@ public class UsersFragment extends Fragment {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 ModelUsers md = document.toObject(ModelUsers.class);
                                 md.setEmail(document.getId());
-                                if(!firebaseAuth.getCurrentUser().getEmail().equals(document.getId())) {
-                                    if(md.getName().toLowerCase().contains(s.toLowerCase())) {
-                                        usersList.add(new ModelUsers(md.name, md.year, md.dept,md.email));
+
+                                    if(md.getName().toLowerCase().contains(s.toLowerCase()) ||
+                                            md.getDomain1().toLowerCase().contains(s.toLowerCase()) ||
+                                            md.getDomain2().toLowerCase().contains(s.toLowerCase()) ||
+                                            md.getDomain3().toLowerCase().contains(s.toLowerCase()))
+                                    {
+                                        usersList.add(new ModelUsers(md.getName(),md.getYear(),md.getDept(),md.getEmail()));
                                     }
-                                }
+
 
                                 Adapter = new ExampleAdapter(usersList);
                                 recyclerView.setAdapter(Adapter);
@@ -164,6 +176,7 @@ public class UsersFragment extends Fragment {
                     }
                 });
 
+
     }
 
     //inflate menu items
@@ -178,6 +191,7 @@ public class UsersFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                Log.d("afsefegsgrhdhdhdhh", "Not found!!!!!!!!!!!!");
                 SearchText(query);
                 return false;
             }
