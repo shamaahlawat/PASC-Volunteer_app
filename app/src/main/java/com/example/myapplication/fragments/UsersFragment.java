@@ -110,7 +110,8 @@ public class UsersFragment extends Fragment {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         ModelUsers md = document.toObject(ModelUsers.class);
-
+                        md.setEmail(document.getId());
+                        
                         if(!user.getEmail().equals(document.getId())) {
                             //usersList.add(md);
                             usersList.add(new ModelUsers(md.getName(),md.getYear(),md.getDept(),md.getEmail()));
